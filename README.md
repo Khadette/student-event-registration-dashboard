@@ -60,5 +60,5 @@ Future Improvements
 
 Author
 
-Khadette
+Isimbi Emelyne.N
 Student Event Registration Dashboard Project
