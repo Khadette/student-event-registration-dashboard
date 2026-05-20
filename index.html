@@ -3,675 +3,387 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduEvents — Student Registration Dashboard</title>
+  <title>Student Event Registration Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --ink: #0f0f0f;
-      --paper: #f5f1eb;
-      --cream: #ede9e1;
-      --accent: #e85d26;
-      --accent2: #2563eb;
-      --muted: #6b6760;
-      --card-bg: #ffffff;
-      --border: #d9d4cc;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-      min-height: 100vh;
-    }
-    h1, h2, h3, .display { font-family: 'Syne', sans-serif; }
-
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--ink);
-      border-bottom: 3px solid var(--accent);
-      padding: 0 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-    }
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.25rem;
-      color: #fff; letter-spacing: -0.02em;
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-search {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      padding: 0.35rem 1rem;
-      gap: 0.5rem;
-    }
-    .nav-search input {
-      background: transparent; border: none; outline: none;
-      color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-      width: 180px;
-    }
-    .nav-search input::placeholder { color: rgba(255,255,255,0.4); }
-    .nav-search svg { color: rgba(255,255,255,0.4); flex-shrink: 0; }
-    .nav-links { display: flex; gap: 1.5rem; }
-    .nav-links a {
-      color: rgba(255,255,255,0.7); font-size: 0.875rem;
-      text-decoration: none; font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--accent); }
-
-    /* HERO */
-    .hero {
-      background: var(--ink);
-      padding: 5rem 2rem 4rem;
-      position: relative; overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(232,93,38,0.18) 0%, transparent 65%),
-                  radial-gradient(ellipse at 20% 80%, rgba(37,99,235,0.12) 0%, transparent 60%);
-    }
-    .hero-grid {
-      position: absolute; inset: 0; opacity: 0.04;
-      background-image: linear-gradient(var(--paper) 1px, transparent 1px),
-                        linear-gradient(90deg, var(--paper) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    .hero-inner {
-      max-width: 860px; margin: 0 auto; position: relative; z-index: 1;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: rgba(232,93,38,0.15);
-      border: 1px solid rgba(232,93,38,0.35);
-      color: var(--accent); border-radius: 100px;
-      padding: 0.3rem 1rem; font-size: 0.8rem; font-weight: 600;
-      letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.5rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800; line-height: 1.05;
-      color: #fff; letter-spacing: -0.03em;
-      margin-bottom: 1.2rem;
-    }
-    .hero h1 em { color: var(--accent); font-style: normal; }
-    .hero p {
-      color: rgba(255,255,255,0.55); font-size: 1.1rem;
-      line-height: 1.7; max-width: 560px; margin: 0 auto;
-    }
-
-    /* STATS */
-    .stats-bar {
-      background: var(--cream); border-bottom: 1px solid var(--border);
-      padding: 0;
-    }
-    .stats-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(3, 1fr);
-    }
-    .stat-item {
-      padding: 2rem 2.5rem;
-      border-right: 1px solid var(--border);
-      position: relative;
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-label {
-      font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.4rem;
-    }
-    .stat-value {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.8rem; font-weight: 800;
-      color: var(--ink); line-height: 1;
-    }
-    .stat-item:nth-child(1) .stat-value { color: var(--accent2); }
-    .stat-item:nth-child(2) .stat-value { color: var(--accent); }
-    .stat-item:nth-child(3) .stat-value { color: #16a34a; }
-
-    /* MAIN CONTENT */
-    .main-wrap {
-      max-width: 1100px; margin: 0 auto;
-      padding: 3rem 1.5rem;
-      display: grid; grid-template-columns: 1fr 340px;
-      gap: 2.5rem; align-items: start;
-    }
-
-    /* SECTION HEADER */
-    .section-header {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.4rem; font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-    .section-count {
-      font-size: 0.8rem; color: var(--muted); font-weight: 500;
-    }
-
-    /* EVENTS GRID */
-    #events-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.25rem;
-    }
-
-    /* EVENT CARD */
-    .event-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex; flex-direction: column;
-      gap: 1rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      animation: cardIn 0.35s ease both;
-    }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .event-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.09);
-    }
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-    .card-category {
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.07em; text-transform: uppercase;
-      padding: 0.25rem 0.7rem; border-radius: 100px;
-    }
-    .cat-technology  { background: #dbeafe; color: #1d4ed8; }
-    .cat-science     { background: #d1fae5; color: #065f46; }
-    .cat-arts        { background: #fce7f3; color: #9d174d; }
-    .cat-sports      { background: #fef3c7; color: #92400e; }
-    .cat-workshop    { background: #ede9fe; color: #5b21b6; }
-    .cat-other       { background: #f3f4f6; color: #374151; }
-    .card-id {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.7rem; font-weight: 700;
-      color: var(--border); letter-spacing: 0.06em;
-    }
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.05rem; font-weight: 700;
-      line-height: 1.3; letter-spacing: -0.01em;
-    }
-    .card-seats {
-      display: flex; flex-direction: column; gap: 0.5rem;
-    }
-    .seat-bar-wrap {
-      background: var(--cream); border-radius: 100px; height: 6px; overflow: hidden;
-    }
-    .seat-bar {
-      height: 100%; border-radius: 100px;
-      transition: width 0.4s ease;
-    }
-    .seat-bar.ok   { background: #16a34a; }
-    .seat-bar.mid  { background: #f59e0b; }
-    .seat-bar.full { background: #ef4444; }
-    .seat-meta {
-      display: flex; justify-content: space-between;
-      font-size: 0.78rem; color: var(--muted);
-    }
-    .seat-meta strong { color: var(--ink); font-weight: 600; }
-    .card-actions { display: flex; gap: 0.6rem; }
-    .btn-register, .btn-cancel {
-      flex: 1; padding: 0.6rem 0; border-radius: 10px;
-      font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700;
-      border: none; cursor: pointer; transition: all 0.18s;
-      letter-spacing: 0.02em;
-    }
-    .btn-register {
-      background: var(--ink); color: #fff;
-    }
-    .btn-register:hover:not(:disabled) {
-      background: var(--accent);
-    }
-    .btn-register:disabled {
-      background: var(--border); color: var(--muted); cursor: not-allowed;
-    }
-    .btn-cancel {
-      background: transparent; color: var(--ink);
-      border: 1.5px solid var(--border);
-    }
-    .btn-cancel:hover:not(:disabled) {
-      border-color: #ef4444; color: #ef4444;
-    }
-    .btn-cancel:disabled {
-      color: var(--border); cursor: not-allowed;
-    }
-    .full-badge {
-      text-align: center; font-size: 0.75rem; font-weight: 700;
-      color: #ef4444; letter-spacing: 0.05em; text-transform: uppercase;
-    }
-
-    /* EMPTY STATE */
-    .empty-state {
-      grid-column: 1/-1;
-      text-align: center; padding: 4rem 2rem;
-      color: var(--muted);
-    }
-    .empty-state svg { margin: 0 auto 1rem; opacity: 0.3; }
-    .empty-state p { font-size: 1rem; }
-
-    /* SIDEBAR / FORM */
-    .sidebar { position: sticky; top: 80px; }
-    .form-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-    .form-header {
-      background: var(--ink); padding: 1.25rem 1.5rem;
-      display: flex; align-items: center; gap: 0.75rem;
-    }
-    .form-header-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: var(--accent); display: flex; align-items: center; justify-content: center;
-    }
-    .form-header h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      color: #fff;
-    }
-    .form-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-label {
-      font-size: 0.75rem; font-weight: 700;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--muted);
-    }
-    .form-input, .form-select {
-      padding: 0.7rem 0.9rem;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-      color: var(--ink); background: var(--paper);
-      transition: border-color 0.18s;
-      outline: none;
-    }
-    .form-input:focus, .form-select:focus {
-      border-color: var(--accent2);
-      background: #fff;
-    }
-    .form-error {
-      font-size: 0.78rem; color: #ef4444; font-weight: 500;
-      display: none;
-    }
-    .form-error.show { display: block; }
-    .btn-submit {
-      width: 100%; padding: 0.85rem;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 10px;
-      font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
-      letter-spacing: 0.02em; cursor: pointer;
-      transition: background 0.18s, transform 0.12s;
-    }
-    .btn-submit:hover { background: #c94e1e; transform: translateY(-1px); }
-    .btn-submit:active { transform: translateY(0); }
-    .form-success {
-      margin: 0 1.5rem 1rem;
-      background: #d1fae5; border: 1px solid #6ee7b7;
-      color: #065f46; border-radius: 8px;
-      padding: 0.65rem 1rem; font-size: 0.85rem; font-weight: 500;
-      display: none;
-    }
-    .form-success.show { display: block; }
-
-    /* TOAST */
+    /* Toast popup animation */
     #toast {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
-      background: var(--ink); color: #fff;
-      padding: 0.8rem 1.4rem; border-radius: 10px;
-      font-size: 0.875rem; font-weight: 500;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      transform: translateY(20px); opacity: 0;
-      transition: all 0.3s ease; pointer-events: none;
-      border-left: 4px solid var(--accent);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    #toast.show { transform: translateY(0); opacity: 1; }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .main-wrap { grid-template-columns: 1fr; }
-      .sidebar { position: static; }
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
-    @media (max-width: 640px) {
-      nav { padding: 0 1rem; }
-      .nav-links { display: none; }
-      .nav-search input { width: 130px; }
-      .stats-inner { grid-template-columns: 1fr; }
-      .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem; }
-      .stat-item:last-child { border-bottom: none; }
-      .hero { padding: 3rem 1.25rem 2.5rem; }
-      .main-wrap { padding: 2rem 1rem; }
+    #toast.hide {
+      opacity: 0;
+      transform: translateY(30px);
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-100 min-h-screen">
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Student<span>Events Dashboard</span></div>
-  <div class="nav-search">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-    </svg>
-    <input type="text" id="search-input" placeholder="Search events…"/>
-  </div>
-  <div class="nav-links">
-    <a href="#events">Events</a>
-    <a href="#add-event">Add Event</a>
-  </div>
-</nav>
+  <!-- TOAST POPUP -->
+  <div
+    id="toast"
+    class="hide fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm font-semibold pointer-events-none"
+    style="min-width: 220px; text-align: center;"
+  ></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="hero-badge">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-      Live Dashboard
+  <!-- NAVBAR -->
+  <nav class="bg-teal-700 text-white shadow-md sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
+      <h1 class="text-xl font-bold tracking-wide">📋 EventReg</h1>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="🔍 Search events..."
+        class="px-3 py-1 rounded-md text-slate-800 bg-white border border-teal-300 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-teal-300"
+        oninput="searchEvents()"
+      />
     </div>
-    <h1>Manage <em>Student Events</em><br/>with Ease</h1>
-    <p>Register for campus events, track available seats, and manage your schedule — all in one place, updated in real time.</p>
-  </div>
-</section>
+  </nav>
 
-<!-- STATS -->
-<section class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-label">Total Events</div>
-      <div class="stat-value" id="stat-total">0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Registered Students</div>
-      <div class="stat-value" id="stat-registered">0</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-label">Available Seats</div>
-      <div class="stat-value" id="stat-available">0</div>
-    </div>
-  </div>
-</section>
-
-<!-- MAIN -->
-<div class="main-wrap">
-
-  <!-- EVENTS -->
-  <div id="events">
-    <div class="section-header">
-      <h2 class="section-title">All Events</h2>
-      <span class="section-count" id="events-count"></span>
-    </div>
-    <div id="events-container"></div>
+  <!-- HERO SECTION -->
+  <div class="bg-teal-600 text-white text-center py-10 px-4">
+    <h2 class="text-3xl font-bold mb-2">Student Event Registration</h2>
+    <p class="text-base max-w-xl mx-auto text-teal-100">
+      View upcoming school events, register your spot, and manage your bookings — all in one place.
+    </p>
   </div>
 
-  <!-- FORM SIDEBAR -->
-  <aside class="sidebar" id="add-event">
-    <div class="form-card">
-      <div class="form-header">
-        <div class="form-header-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        </div>
-        <h3>Add New Event</h3>
+  <!-- STATISTICS SECTION -->
+  <div class="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded shadow-sm p-4 text-center">
+      <p class="text-slate-500 text-sm mb-1">Total Events</p>
+      <p id="statTotalEvents" class="text-4xl font-bold text-teal-600">0</p>
+    </div>
+    <div class="bg-white rounded shadow-sm p-4 text-center">
+      <p class="text-slate-500 text-sm mb-1">Total Registered</p>
+      <p id="statTotalRegistered" class="text-4xl font-bold text-indigo-500">0</p>
+    </div>
+    <div class="bg-white rounded shadow-sm p-4 text-center">
+      <p class="text-slate-500 text-sm mb-1">Remaining Seats</p>
+      <p id="statTotalSeats" class="text-4xl font-bold text-amber-500">0</p>
+    </div>
+  </div>
+
+  <!-- ADD EVENT FORM -->
+  <div class="max-w-6xl mx-auto px-4 mt-6">
+    <div class="bg-white rounded shadow-sm border border-slate-200 p-6">
+      <h3 class="text-lg font-bold mb-4 text-slate-700 border-b pb-2">➕ Add New Event</h3>
+      <div id="formError" class="hidden bg-red-50 text-red-600 border border-red-300 rounded px-4 py-2 mb-4 text-sm"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input
+          id="inputTitle"
+          type="text"
+          placeholder="Event Title"
+          class="border border-slate-300 rounded-md px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
+        />
+        <select id="inputCategory" class="border border-slate-300 rounded-md px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-teal-400 text-slate-700">
+          <option value="">-- Select Category --</option>
+          <option value="Technology">Technology</option>
+          <option value="Science">Science</option>
+          <option value="Arts">Arts</option>
+          <option value="Sports">Sports</option>
+          <option value="Business">Business</option>
+          <option value="Health">Health</option>
+          <option value="Other">Other</option>
+        </select>
+        <input
+          id="inputSeats"
+          type="number"
+          placeholder="Number of Seats"
+          min="1"
+          class="border border-slate-300 rounded-md px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
+        />
       </div>
-      <div class="form-success" id="form-success">✓ Event added successfully!</div>
-      <div class="form-body">
-        <div class="form-group">
-          <label class="form-label" for="event-title">Event Title</label>
-          <input class="form-input" type="text" id="event-title" placeholder="e.g. AI Bootcamp"/>
-          <span class="form-error" id="err-title">Please enter an event title.</span>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="event-category">Category</label>
-          <select class="form-select" id="event-category">
-            <option value="">— Select category —</option>
-            <option value="Technology">Technology</option>
-            <option value="Science">Science</option>
-            <option value="Arts">Arts</option>
-            <option value="Sports">Sports</option>
-            <option value="Workshop">Workshop</option>
-            <option value="Other">Other</option>
-          </select>
-          <span class="form-error" id="err-category">Please select a category.</span>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="event-seats">Number of Seats</label>
-          <input class="form-input" type="number" id="event-seats" placeholder="e.g. 30" min="1"/>
-          <span class="form-error" id="err-seats">Please enter a valid number of seats (≥ 1).</span>
-        </div>
-        <button class="btn-submit" id="add-event-btn">Add Event</button>
-      </div>
+      <button
+        onclick="addEvent()"
+        class="mt-4 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold px-6 py-2 rounded-md text-sm transition-all"
+      >
+        + Add Event
+      </button>
     </div>
-  </aside>
+  </div>
 
-</div>
+  <!-- EVENT DISPLAY AREA -->
+  <div class="max-w-6xl mx-auto px-4 mt-6 mb-12">
+    <h3 class="text-lg font-bold text-slate-700 mb-4">🗓 Available Events</h3>
+    <div id="eventContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Cards go here -->
+    </div>
+    <p id="noEventsMsg" class="hidden text-center text-slate-400 mt-12 text-base">No events found.</p>
+  </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+  <script>
+    // ─── DATA ────────────────────────────────────────────────────────────────
 
-<script>
-  // ─── State ───────────────────────────────────────────────────────────
-  const STORAGE_KEY = 'eduevents_data';
-  let nextId = 1;
+    let events = [];
+    let nextId = 1;
 
-  const defaultEvents = [
-    { id: nextId++, title: 'AI Bootcamp',        category: 'Technology', seats: 50, registered: 12 },
-    { id: nextId++, title: 'Chemistry Lab Expo',  category: 'Science',    seats: 50, registered:15 },
-    { id: nextId++, title: 'Drama & Theatre Night',category: 'Arts',      seats:50, registered: 17 },
-    { id: nextId++, title: 'Inter-School Sports',  category: 'Sports',    seats: 50,registered: 15 },
-    { id: nextId++, title: 'Web Dev Workshop',     category: 'Workshop',  seats: 50, registered: 5 },
-    { id: nextId++, title: 'Photography Club',     category: 'Arts',      seats: 50, registered: 15 },
-    { id: nextId++, title: 'igire hackthon',     category: 'Technology', seats: 50, registered: 20 },
-    { id: nextId++, title: 'Astronomy Night',      category: 'Science',    seats: 50, registered: 8 },
-  ];
+    const defaultEvents = [
+      { id: 1, title: "AI Bootcamp",    category: "Technology", seats: 30, registered: 12 },
+      { id: 2, title: "Science Fair",   category: "Science",    seats: 50, registered: 20 },
+      { id: 3, title: "Art Workshop",   category: "Arts",       seats: 20, registered: 5  },
+    ];
 
-  function loadEvents() // loads events when page opens
-  {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) //if data is exists in local storage, it will be loaded  
-      {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          nextId = Math.max(...parsed.map(e => e.id)) + 1;
-          return parsed;
-        }
+    // ─── TOAST POPUP ─────────────────────────────────────────────────────────
+
+    let toastTimer = null;
+
+    function showToast(message, type) {
+      const toast = document.getElementById("toast");
+
+      // Color based on type
+      toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm font-semibold pointer-events-none";
+
+      if (type === "success") {
+        toast.classList.add("bg-teal-600");
+      } else if (type === "cancel") {
+        toast.classList.add("bg-red-500");
+      } else if (type === "error") {
+        toast.classList.add("bg-amber-500");
+      } else if (type === "add") {
+        toast.classList.add("bg-indigo-500");
       }
-    } catch(e) {}
-    return defaultEvents.map(e => ({...e}));
-  }
 
-  function saveEvents(events) // keeps data after page refreshes
-  {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(events)); } catch(e) {}
-  }
+      toast.style.minWidth  = "220px";
+      toast.style.textAlign = "center";
+      toast.textContent = message;
 
-  let events = loadEvents();
+      // Show it
+      toast.classList.remove("hide");
+      toast.classList.add("show");
 
-  // ─── Utils ───────────────────────────────────────────────────────────
-  function getCatClass(cat) {
-    const map = { Technology:'cat-technology', Science:'cat-science', Arts:'cat-arts', Sports:'cat-sports', Workshop:'cat-workshop' };
-    return map[cat] || 'cat-other';
-  }
-
-  function showToast(msg) //show popup message whethersucccess or cancel message 
-  {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  // ─── Stats ───────────────────────────────────────────────────────────
-  function updateStats(list) // update number of total events, registered students, and available seats based on the current list of events, and update the stats section in the page accordingly
-   {
-    document.getElementById('stat-total').textContent = list.length;
-    const totalReg  = list.reduce((s,e) => s + e.registered, 0);
-    const totalAvail= list.reduce((s,e) => s + (e.seats - e.registered), 0);
-    document.getElementById('stat-registered').textContent = totalReg;
-    document.getElementById('stat-available').textContent  = totalAvail;
-  }
-
-  // ─── Render ──────────────────────────────────────────────────────────
-  function renderEvents(list)//show events on screen, also build all events cards, and update the page when user registers or cancels an event
-   {
-    const container = document.getElementById('events-container');
-    const countEl   = document.getElementById('events-count');
-    container.innerHTML = '';
-    updateStats(list);
-    countEl.textContent = list.length === events.length
-      ? `${list.length} event${list.length !== 1 ? 's' : ''}`
-      : `${list.length} of ${events.length} events`;
-
-    if (list.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-          </svg>
-          <p>No events found. Try a different search or add a new event.</p>
-        </div>`;
-      return;
+      // Hide after 2.5 seconds
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() {
+        toast.classList.remove("show");
+        toast.classList.add("hide");
+      }, 2500);
     }
 
-    list.forEach(ev => {
-      const remaining = ev.seats - ev.registered;
-      const pct       = Math.round((ev.registered / ev.seats) * 100);
-      const barClass  = pct < 50 ? 'ok' : pct < 85 ? 'mid' : 'full';
-      const isFull    = remaining <= 0;
+    // ─── LOCAL STORAGE ───────────────────────────────────────────────────────
 
-      const card = document.createElement('div');
-      card.className = 'event-card';
-      card.dataset.id = ev.id;
+    function saveToLocalStorage() {
+      localStorage.setItem("studentEvents", JSON.stringify(events));
+      localStorage.setItem("studentEventsNextId", JSON.stringify(nextId));
+    }
 
-      card.innerHTML = `
-        <div class="card-top">
-          <span class="card-category ${getCatClass(ev.category)}">${ev.category}</span>
-          <span class="card-id">#${String(ev.id).padStart(3,'0')}</span>
-        </div>
-        <div class="card-title">${ev.title}</div>
-        <div class="card-seats">
-          <div class="seat-bar-wrap">
-            <div class="seat-bar ${barClass}" style="width:${pct}%"></div>
+    function loadFromLocalStorage() {
+      const saved   = localStorage.getItem("studentEvents");
+      const savedId = localStorage.getItem("studentEventsNextId");
+
+      if (saved) {
+        events = JSON.parse(saved);
+        nextId = savedId ? JSON.parse(savedId) : events.length + 1;
+      } else {
+        events = defaultEvents;
+        nextId = events.length + 1;
+        saveToLocalStorage();
+      }
+    }
+
+    // ─── STATISTICS ──────────────────────────────────────────────────────────
+
+    function updateStats() {
+      const totalEvents     = events.length;
+      const totalRegistered = events.reduce(function(sum, e) { return sum + e.registered; }, 0);
+      const totalRemaining  = events.reduce(function(sum, e) { return sum + (e.seats - e.registered); }, 0);
+
+      document.getElementById("statTotalEvents").textContent     = totalEvents;
+      document.getElementById("statTotalRegistered").textContent = totalRegistered;
+      document.getElementById("statTotalSeats").textContent      = totalRemaining;
+    }
+
+    // ─── CATEGORY COLORS ─────────────────────────────────────────────────────
+
+    function getCategoryStyle(category) {
+      var map = {
+        "Technology": "bg-blue-100 text-blue-700",
+        "Science":    "bg-green-100 text-green-700",
+        "Arts":       "bg-pink-100 text-pink-700",
+        "Sports":     "bg-orange-100 text-orange-700",
+        "Business":   "bg-yellow-100 text-yellow-700",
+        "Health":     "bg-teal-100 text-teal-700",
+        "Other":      "bg-slate-100 text-slate-600",
+      };
+      return map[category] || "bg-slate-100 text-slate-600";
+    }
+
+    // ─── RENDER EVENTS ───────────────────────────────────────────────────────
+
+    function renderEvents(list) {
+      const container = document.getElementById("eventContainer");
+      const noMsg     = document.getElementById("noEventsMsg");
+      container.innerHTML = "";
+
+      if (list.length === 0) {
+        noMsg.classList.remove("hidden");
+        return;
+      }
+
+      noMsg.classList.add("hidden");
+
+      list.forEach(function(event) {
+        const remaining   = event.seats - event.registered;
+        const isFull      = remaining <= 0;
+        const noReg       = event.registered <= 0;
+        const catStyle    = getCategoryStyle(event.category);
+
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-lg shadow-sm border border-slate-200 p-4 flex flex-col gap-3";
+
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold text-base text-slate-800 leading-snug">${event.title}</h4>
+            <span class="text-xs font-semibold px-2 py-1 rounded-full ${catStyle} ml-2 shrink-0">${event.category}</span>
           </div>
-          <div class="seat-meta">
-            <span><strong>${ev.registered}</strong> registered</span>
-            <span><strong>${remaining}</strong> left / ${ev.seats} total</span>
+
+          <div class="text-sm text-slate-600 space-y-1">
+            <div class="flex justify-between"><span>Total Seats</span><span class="font-semibold text-slate-700">${event.seats}</span></div>
+            <div class="flex justify-between"><span>Registered</span><span class="font-semibold text-indigo-600">${event.registered}</span></div>
+            <div class="flex justify-between"><span>Remaining</span><span class="font-semibold ${isFull ? 'text-red-500' : 'text-teal-600'}">${remaining}</span></div>
           </div>
-        </div>
-        <div class="card-actions">
-          <button class="btn-register" data-id="${ev.id}" ${isFull ? 'disabled' : ''}>
-            ${isFull ? 'Full' : 'Register'}
-          </button>
-          <button class="btn-cancel" data-id="${ev.id}" ${ev.registered === 0 ? 'disabled' : ''}>
-            Cancel
-          </button>
-        </div>
-        ${isFull ? '<div class="full-badge">● Event Full</div>' : ''}
-      `;
-      container.appendChild(card);
-    });
 
-    // Attach button events
-    container.querySelectorAll('.btn-register').forEach(btn => {
-      btn.addEventListener('click', () => register(Number(btn.dataset.id)));
-    });
-    container.querySelectorAll('.btn-cancel').forEach(btn => {
-      btn.addEventListener('click', () => cancel(Number(btn.dataset.id)));
-    });
-  }
+          ${isFull ? '<p class="text-xs text-red-500 font-semibold text-center">⚠️ Event is Full</p>' : ''}
 
-  // ─── Register / Cancel ───────────────────────────────────────────────
-  function register(id) // increase the number of registered students for an event, and update the page accordingly, also show a toast message to confirm registration
-   {
-    const ev = events.find(e => e.id === id);
-    if (!ev || ev.registered >= ev.seats) return; // stop if event is full or not found
-    ev.registered++;
-    saveEvents(events);
-    renderEvents(getFiltered());
-    showToast(`✓ Registered for "${ev.title}"`);
-  }
+          <div class="flex gap-2 pt-1">
+            <button
+              onclick="registerForEvent(${event.id})"
+              ${isFull ? 'disabled' : ''}
+              class="flex-1 py-1.5 rounded-md text-white text-xs font-bold transition-all active:scale-95
+                ${isFull ? 'bg-slate-300 cursor-not-allowed' : 'bg-teal-500 hover:bg-teal-600'}"
+            >
+              ✔ Register
+            </button>
+            <button
+              onclick="cancelRegistration(${event.id})"
+              ${noReg ? 'disabled' : ''}
+              class="flex-1 py-1.5 rounded-md text-white text-xs font-bold transition-all active:scale-95
+                ${noReg ? 'bg-slate-300 cursor-not-allowed' : 'bg-rose-500 hover:bg-rose-600'}"
+            >
+              ✖ Cancel
+            </button>
+          </div>
+        `;
 
-  function cancel(id) // decrease the number of registered students for an event, and update the page accordingly, also show a toast message to confirm cancellation
-  {
-    const ev = events.find(e => e.id === id);
-    if (!ev || ev.registered <= 0) return; //stop if event not found or nothing to cancel
-    ev.registered--;
-    saveEvents(events);
-    renderEvents(getFiltered());
-    showToast(`✗ Cancelled registration for "${ev.title}"`);
-  }
+        container.appendChild(card);
+      });
+    }
 
-  // ─── Search ──────────────────────────────────────────────────────────
-  function getFiltered() // search event, also filter events based on search query, matching against event title and category, and update the displayed events in real time as user types in the search input
-   {
-    const q = document.getElementById('search-input').value.trim().toLowerCase();
-    if (!q) return events; // if search is empety, show all events
-    return events.filter(e =>
-      e.title.toLowerCase().includes(q) ||
-      e.category.toLowerCase().includes(q)
-    );
-  }
+    // ─── ADD EVENT ───────────────────────────────────────────────────────────
 
-  document.getElementById('search-input').addEventListener('input', () => {
-    renderEvents(getFiltered());
-  });
+    function addEvent() {
+      const title    = document.getElementById("inputTitle").value.trim();
+      const category = document.getElementById("inputCategory").value;
+      const seats    = parseInt(document.getElementById("inputSeats").value);
+      const errorBox = document.getElementById("formError");
 
-  // ─── Add Event Form ───────────────────────────────────────────────────
-  document.getElementById('add-event-btn').addEventListener('click', () => {
-    const titleEl    = document.getElementById('event-title');
-    const categoryEl = document.getElementById('event-category');
-    const seatsEl    = document.getElementById('event-seats');
+      if (!title) {
+        showFormError("Please enter an event title.");
+        return;
+      }
+      if (!category) {
+        showFormError("Please select a category.");
+        return;
+      }
+      if (!seats || seats < 1) {
+        showFormError("Please enter a valid number of seats (at least 1).");
+        return;
+      }
 
-    const errTitle    = document.getElementById('err-title');
-    const errCategory = document.getElementById('err-category');
-    const errSeats    = document.getElementById('err-seats');
-    const successMsg  = document.getElementById('form-success');
+      errorBox.classList.add("hidden");
 
-    // Reset errors
-    [errTitle, errCategory, errSeats].forEach(e => e.classList.remove('show'));
-    successMsg.classList.remove('show');
+      const newEvent = {
+        id: nextId,
+        title: title,
+        category: category,
+        seats: seats,
+        registered: 0
+      };
 
-    const title    = titleEl.value.trim();
-    const category = categoryEl.value;
-    const seats    = parseInt(seatsEl.value, 10);
+      nextId++;
+      events.push(newEvent);
+      saveToLocalStorage();
 
-    let valid = true;
-    //if user input is wrong then show error message
-    if (!title)               { errTitle.classList.add('show');    valid = false; }
-    if (!category)            { errCategory.classList.add('show'); valid = false; }
-    if (!seats || seats < 1)  { errSeats.classList.add('show');    valid = false; }
-    if (!valid) return;
+      // Clear form
+      document.getElementById("inputTitle").value    = "";
+      document.getElementById("inputCategory").value = "";
+      document.getElementById("inputSeats").value    = "";
 
-    const newEvent = { id: nextId++, title, category, seats, registered: 0 };
-    events.push(newEvent);
-    saveEvents(events);
-    renderEvents(getFiltered());
+      renderEvents(events);
+      updateStats();
 
-    // Reset
-    titleEl.value = '';
-    categoryEl.value = '';
-    seatsEl.value = '';
-    successMsg.classList.add('show');
-    setTimeout(() => successMsg.classList.remove('show'), 3000);
-    showToast(`✓ "${title}" added successfully!`);
-  });
+      // Toast notification
+      showToast("✅ Event \"" + newEvent.title + "\" added!", "add");
+    }
 
-  // ─── Init ─────────────────────────────────────────────────────────────
-  renderEvents(events);
-</script>
+    function showFormError(msg) {
+      const errorBox = document.getElementById("formError");
+      errorBox.textContent = msg;
+      errorBox.classList.remove("hidden");
+    }
+
+    // ─── REGISTER ────────────────────────────────────────────────────────────
+
+    function registerForEvent(id) {
+      const event = events.find(function(e) { return e.id === id; });
+      if (!event) return;
+
+      if (event.registered >= event.seats) {
+        showToast("⚠️ This event is full!", "error");
+        return;
+      }
+
+      event.registered++;
+      saveToLocalStorage();
+      renderEvents(events);
+      updateStats();
+
+      showToast("✅ Registered for \"" + event.title + "\"!", "success");
+    }
+
+    // ─── CANCEL ──────────────────────────────────────────────────────────────
+
+    function cancelRegistration(id) {
+      const event = events.find(function(e) { return e.id === id; });
+      if (!event) return;
+
+      if (event.registered <= 0) {
+        showToast("ℹ️ No registrations to cancel.", "error");
+        return;
+      }
+
+      event.registered--;
+      saveToLocalStorage();
+      renderEvents(events);
+      updateStats();
+
+      showToast("❌ Cancelled registration for \"" + event.title + "\"", "cancel");
+    }
+
+    // ─── SEARCH ──────────────────────────────────────────────────────────────
+
+    function searchEvents() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      const filtered = events.filter(function(event) {
+        return (
+          event.title.toLowerCase().includes(query) ||
+          event.category.toLowerCase().includes(query)
+        );
+      });
+
+      renderEvents(filtered);
+    }
+
+    // ─── INIT ────────────────────────────────────────────────────────────────
+
+    loadFromLocalStorage();
+    renderEvents(events);
+    updateStats();
+  </script>
+
 </body>
 </html>
