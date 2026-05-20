@@ -474,12 +474,16 @@
     { id: nextId++, title: 'Inter-School Sports',  category: 'Sports',    seats: 50,registered: 15 },
     { id: nextId++, title: 'Web Dev Workshop',     category: 'Workshop',  seats: 50, registered: 5 },
     { id: nextId++, title: 'Photography Club',     category: 'Arts',      seats: 50, registered: 15 },
+    { id: nextId++, title: 'igire hackthon',     category: 'Technology', seats: 50, registered: 20 },
+    { id: nextId++, title: 'Astronomy Night',      category: 'Science',    seats: 50, registered: 8 },
   ];
 
-  function loadEvents() {
+  function loadEvents() // loads events when page opens
+  {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
+      if (saved) //if data is exists in local storage, it will be loaded  
+      {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           nextId = Math.max(...parsed.map(e => e.id)) + 1;
@@ -490,7 +494,8 @@
     return defaultEvents.map(e => ({...e}));
   }
 
-  function saveEvents(events) {
+  function saveEvents(events) // keeps data after page refreshes
+  {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(events)); } catch(e) {}
   }
 
@@ -502,7 +507,8 @@
     return map[cat] || 'cat-other';
   }
 
-  function showToast(msg) {
+  function showToast(msg) //show popup message whethersucccess or cancel message 
+  {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
@@ -510,7 +516,8 @@
   }
 
   // ─── Stats ───────────────────────────────────────────────────────────
-  function updateStats(list) {
+  function updateStats(list) // update number of total events, registered students, and available seats based on the current list of events, and update the stats section in the page accordingly
+   {
     document.getElementById('stat-total').textContent = list.length;
     const totalReg  = list.reduce((s,e) => s + e.registered, 0);
     const totalAvail= list.reduce((s,e) => s + (e.seats - e.registered), 0);
@@ -519,7 +526,8 @@
   }
 
   // ─── Render ──────────────────────────────────────────────────────────
-  function renderEvents(list) {
+  function renderEvents(list)//show events on screen, also build all events cards, and update the page when user registers or cancels an event
+   {
     const container = document.getElementById('events-container');
     const countEl   = document.getElementById('events-count');
     container.innerHTML = '';
@@ -587,18 +595,20 @@
   }
 
   // ─── Register / Cancel ───────────────────────────────────────────────
-  function register(id) {
+  function register(id) // increase the number of registered students for an event, and update the page accordingly, also show a toast message to confirm registration
+   {
     const ev = events.find(e => e.id === id);
-    if (!ev || ev.registered >= ev.seats) return;
+    if (!ev || ev.registered >= ev.seats) return; // stop if event is full or not found
     ev.registered++;
     saveEvents(events);
     renderEvents(getFiltered());
     showToast(`✓ Registered for "${ev.title}"`);
   }
 
-  function cancel(id) {
+  function cancel(id) // decrease the number of registered students for an event, and update the page accordingly, also show a toast message to confirm cancellation
+  {
     const ev = events.find(e => e.id === id);
-    if (!ev || ev.registered <= 0) return;
+    if (!ev || ev.registered <= 0) return; //stop if event not found or nothing to cancel
     ev.registered--;
     saveEvents(events);
     renderEvents(getFiltered());
@@ -606,9 +616,10 @@
   }
 
   // ─── Search ──────────────────────────────────────────────────────────
-  function getFiltered() {
+  function getFiltered() // search event, also filter events based on search query, matching against event title and category, and update the displayed events in real time as user types in the search input
+   {
     const q = document.getElementById('search-input').value.trim().toLowerCase();
-    if (!q) return events;
+    if (!q) return events; // if search is empety, show all events
     return events.filter(e =>
       e.title.toLowerCase().includes(q) ||
       e.category.toLowerCase().includes(q)
@@ -639,6 +650,7 @@
     const seats    = parseInt(seatsEl.value, 10);
 
     let valid = true;
+    //if user input is wrong then show error message
     if (!title)               { errTitle.classList.add('show');    valid = false; }
     if (!category)            { errCategory.classList.add('show'); valid = false; }
     if (!seats || seats < 1)  { errSeats.classList.add('show');    valid = false; }
